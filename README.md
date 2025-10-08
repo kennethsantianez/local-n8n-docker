@@ -201,15 +201,3 @@ For DB-backed setups, apply any DB migration steps required by the n8n release n
 /data/
 /.env
 ```
-
-## 🧾 License
-
-MIT License — see ```LICENSE``` (or add a license file if desired).
-
-## 👤 Author
-
-Kenneth Santiañez
-
-Web & Application Developer — Philippines
-
-Email: support@ishare.com.ph
