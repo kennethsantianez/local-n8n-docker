@@ -1,1 +1,17 @@
+# n8n data directory
+data/
+
+# PostgreSQL data
+postgres-data/
+
+# Environment file (contains credentials)
 .env
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+.DS_Store
