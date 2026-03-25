@@ -45,7 +45,7 @@ services:
 
       # PostgreSQL Database
       DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_HOST: n8n-postgres
       DB_POSTGRESDB_PORT: 5432
       DB_POSTGRESDB_DATABASE: ${DB_POSTGRESDB_DATABASE}
       DB_POSTGRESDB_USER: ${DB_POSTGRESDB_USER}
@@ -55,6 +55,8 @@ services:
 
       # Performance
       N8N_RUNNERS_ENABLED: ${N8N_RUNNERS_ENABLED}
+    ports:
+      - "5678:5678"
     volumes:
       - ./data:${DATA_FOLDER}
     depends_on:
