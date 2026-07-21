@@ -1,4 +1,4 @@
-# n8n with PostgreSQL - Production Setup
+# n8n with PostgreSQL - Local Setup
 
 Clean and simple n8n workflow automation with PostgreSQL database backend.
 
@@ -19,15 +19,16 @@ docker logs n8n -f
 
 - **n8n** - Workflow automation (latest)
 - **PostgreSQL 16** - Database backend
-- **Traefik** - Reverse proxy with HTTPS
 
 ## 🔧 Configuration
 
 All configuration is in `.env` file:
 
 ```bash
-# Domain (change to your domain)
-N8N_HOST=n8n.best.net.ph
+# Local host/protocol
+N8N_PROTOCOL=http
+N8N_HOST=localhost:5678
+WEBHOOK_URL=http://${N8N_HOST}/
 
 # Basic Auth (change password!)
 N8N_BASIC_AUTH_USER=admin
@@ -42,8 +43,7 @@ N8N_ENCRYPTION_KEY=yourStrongEncryptionKeyHere
 
 ## 🌐 Access
 
-- **HTTPS**: https://n8n.best.net.ph
-- **HTTP Local**: http://localhost:5678 (for testing)
+- **Local**: http://localhost:5678
 
 Login with credentials from `.env` file.
 
@@ -71,6 +71,7 @@ docker-compose logs -f
 
 # PostgreSQL shell
 docker-compose exec postgres psql -U n8n -d n8n
+# (Postgres is also reachable from the host at localhost:6432)
 
 # Backup PostgreSQL
 docker-compose exec postgres pg_dump -U n8n n8n > backup.sql
@@ -86,13 +87,10 @@ docker-compose exec -T postgres psql -U n8n -d n8n < backup.sql
    N8N_BASIC_AUTH_PASSWORD=YourStrongPassword123!
    ```
 
-2. **DNS Configuration**: Point `n8n.best.net.ph` to your server IP
-   - Or change `N8N_HOST` in `.env` to your domain
-
-3. **Encryption Key**: Never change `N8N_ENCRYPTION_KEY` after first run
+2. **Encryption Key**: Never change `N8N_ENCRYPTION_KEY` after first run
    - Changing it will make existing credentials unreadable
 
-4. **Backup regularly**: Both `data/` and PostgreSQL database
+3. **Backup regularly**: Both `data/` and PostgreSQL database
 
 ## 🔍 Troubleshooting
 
@@ -105,18 +103,6 @@ docker logs n8n
 docker-compose restart n8n
 ```
 
-### Cannot access via domain
-```bash
-# Check DNS
-nslookup n8n.best.net.ph
-
-# Check Traefik
-docker logs traefik | grep n8n
-
-# Test local access
-curl http://localhost:5678
-```
-
 ### PostgreSQL errors
 ```bash
 # Check PostgreSQL logs
@@ -126,11 +112,16 @@ docker logs n8n-postgres
 docker-compose exec postgres pg_isready -U n8n
 ```
 
+### Google OAuth redirect_uri_mismatch
+If you configure a Google OAuth credential inside n8n, the redirect URI registered
+in Google Cloud Console must exactly match `WEBHOOK_URL` (scheme + host + port).
+Changing `N8N_PROTOCOL`/`N8N_HOST` (e.g. switching between local and a public
+domain) requires updating the authorized redirect URI in Google Cloud Console too.
+
 ## 📚 Documentation
 
 - [n8n Documentation](https://docs.n8n.io/)
 - [n8n PostgreSQL Setup](https://docs.n8n.io/hosting/installation/database/)
-- [Traefik Documentation](https://doc.traefik.io/traefik/)
 
 ## 🆘 Support
 
@@ -140,6 +131,5 @@ For issues and questions:
 
 ---
 
-**Version**: n8n 1.114.3 | PostgreSQL 16.10  
-**Setup Date**: 2025-11-05  
-**Status**: ✅ Production Ready
+**n8n**: `docker.n8n.io/n8nio/n8n:latest` | **PostgreSQL**: 16-alpine  
+**Status**: Local development
