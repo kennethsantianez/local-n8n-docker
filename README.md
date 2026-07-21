@@ -5,6 +5,9 @@ Clean and simple n8n workflow automation with PostgreSQL database backend.
 ## 🚀 Quick Start
 
 ```bash
+# Copy env template and fill in values
+cp .env.example .env
+
 # Start services
 docker-compose up -d
 
